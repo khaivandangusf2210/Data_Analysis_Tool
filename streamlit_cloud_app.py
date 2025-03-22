@@ -53,9 +53,9 @@ def process_dataframe(df):
 def analyze_data_quality(df):
     st.header("Data Types and Quality")
     
-    dtype_df = pd.DataFrame(df.dtypes, columns=['Data Type'])
-    dtype_df = dtype_df.reset_index()
-    dtype_df.columns = ['Column', 'Data Type']
+    # Convert dtypes to strings explicitly to avoid PyArrow conversion issues
+    dtype_dict = {col: str(dtype) for col, dtype in df.dtypes.items()}
+    dtype_df = pd.DataFrame(list(dtype_dict.items()), columns=['Column', 'Data Type'])
     
     missing_df = pd.DataFrame(df.isnull().sum(), columns=['Missing Values'])
     missing_df = missing_df.reset_index()
@@ -335,7 +335,12 @@ def plot_distribution(df, numeric_cols):
     
     stats = df[col].describe()
     st.write("Descriptive Statistics:")
-    st.dataframe(stats)
+    # Convert to DataFrame with proper formatting to avoid PyArrow issues
+    stats_df = pd.DataFrame({
+        'Metric': stats.index,
+        'Value': stats.values
+    })
+    st.dataframe(stats_df)
 
 def plot_time_series(df):
     datetime_cols = []
@@ -548,7 +553,10 @@ def main():
                 numeric_cols = df_selected.select_dtypes(include=['int64', 'float64']).columns.tolist()
                 if len(numeric_cols) > 0:
                     st.subheader("Descriptive Statistics")
-                    st.dataframe(df_selected[numeric_cols].describe())
+                    # Convert the describe output to a standard DataFrame to avoid PyArrow conversion issues
+                    desc_stats = df_selected[numeric_cols].describe().reset_index()
+                    desc_stats.columns = ['Statistic'] + numeric_cols
+                    st.dataframe(desc_stats)
                     
                     if len(numeric_cols) >= 2:
                         st.subheader("Correlation Analysis")
