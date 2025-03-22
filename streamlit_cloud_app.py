@@ -16,7 +16,6 @@ import sys
 import plotly.express as px
 import plotly.graph_objects as go
 
-# add custom CSS to hide the header
 st.markdown("""
 <style>
     .reportview-container {
@@ -28,14 +27,12 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# cache function for data processing
 @st.cache_data(show_spinner=False)
 def process_dataframe(df):
     """Process dataframe to make it Arrow-compatible"""
     
     df_processed = df.copy()
     
-    # convert float32 to float64
     for col in df_processed.select_dtypes(include=['float32']).columns:
         df_processed[col] = df_processed[col].astype('float64')
     
@@ -93,7 +90,6 @@ def plot_scatter(df, numeric_cols):
     with col1:
         x_col = st.selectbox("Select X-axis", numeric_cols, key="scatter_x")
     
-    # Create Y-axis options - keep the selected X column in options but default to a different column
     y_options = numeric_cols.copy()
     default_y_index = 0 if y_options[0] != x_col else min(1, len(y_options)-1)
     
@@ -147,7 +143,6 @@ def plot_scatter(df, numeric_cols):
         )
     )
     
-    # add grid
     fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='rgba(128, 128, 128, 0.3)')
     fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='rgba(128, 128, 128, 0.3)')
     
@@ -165,7 +160,6 @@ def plot_3d_scatter(df, numeric_cols):
     with col1:
         x_col = st.selectbox("Select X-axis", numeric_cols, key="3d_x")
     
-    # Create Y-axis options - keep all columns but default to a different one
     y_options = numeric_cols.copy()
     default_y_index = 0 if y_options[0] != x_col else min(1, len(y_options)-1)
     
@@ -173,9 +167,7 @@ def plot_3d_scatter(df, numeric_cols):
         y_col = st.selectbox("Select Y-axis", y_options, 
                           index=default_y_index, key="3d_y")
     
-    # Create Z-axis options - keep all columns but default to a different one
     z_options = numeric_cols.copy()
-    # Try to pick a different column from x and y for the z-axis
     if len(z_options) >= 3:
         for i, col in enumerate(z_options):
             if col != x_col and col != y_col:
@@ -336,13 +328,11 @@ def plot_distribution(df, numeric_cols):
         yaxis_title="Density"
     )
     
-    # grid
     fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='rgba(128, 128, 128, 0.3)')
     fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='rgba(128, 128, 128, 0.3)')
     
     st.plotly_chart(fig, use_container_width=True)
     
-    # descriptive statistics
     stats = df[col].describe()
     st.write("Descriptive Statistics:")
     st.dataframe(stats)
@@ -552,7 +542,6 @@ def main():
                     elif viz_type == "3D Scatter Plot":
                         plot_3d_scatter(df_selected, numeric_cols)
             
-            #statistical analysis
             with tab3:
                 st.header("Statistical Analysis")
                 
@@ -561,12 +550,10 @@ def main():
                     st.subheader("Descriptive Statistics")
                     st.dataframe(df_selected[numeric_cols].describe())
                     
-                    #correlation analysis
                     if len(numeric_cols) >= 2:
                         st.subheader("Correlation Analysis")
                         corr = df_selected[numeric_cols].corr()
                         
-                        # Show strongest correlations
                         st.write("Top positive correlations:")
                         mask = np.triu(np.ones_like(corr, dtype=bool))
                         corr_pairs = corr.mask(mask).stack().sort_values(ascending=False)
