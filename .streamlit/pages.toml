@@ -1,0 +1,4 @@
+[[pages]]
+path = "streamlit_cloud_app.py"
+title = "Data Analysis Tool"
+icon = "📊" 

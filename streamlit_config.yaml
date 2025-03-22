@@ -1,0 +1,4 @@
+# Streamlit Cloud configuration file
+# This file tells Streamlit Cloud which file to use as the main entrypoint
+
+entrypoint: streamlit_app.py 
