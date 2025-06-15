@@ -7,7 +7,8 @@ Interactive data analysis and visualization platform built with Streamlit. Uploa
 ```bash
 git clone https://github.com/khaivandangusf2210/Data_Analysis_Tool.git
 cd Data_Analysis_Tool
-docker-compose up
+pip install -r requirements.txt
+streamlit run streamlit_app.py
 ```
 
 Open http://localhost:8501
@@ -19,17 +20,15 @@ Open http://localhost:8501
 - CSV/Excel upload with sample data included
 - Grammar of Graphics playground
 
-## Local Installation
+## Docker Alternative
 
 ```bash
-pip install -r requirements.txt
-streamlit run streamlit_app.py
+docker-compose up
 ```
 
 ## Requirements
 
-- Python 3.11+
-- Docker (recommended)
+- Python 3.8+
 
 ## License
 
