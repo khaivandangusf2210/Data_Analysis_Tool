@@ -11,7 +11,6 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-Open http://localhost:8501
 
 ## Features
 
