@@ -10,7 +10,7 @@ cd Data_Analysis
 docker-compose up
 ```
 
-Open http://localhost:8501
+Then open http://localhost:8501 in your browser
 
 ## Features
 - 10+ visualization types
